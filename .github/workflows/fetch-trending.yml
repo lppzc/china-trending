@@ -1,0 +1,46 @@
+name: Fetch Trending Data
+
+on:
+  schedule:
+    # Run at 6:00, 12:00, 18:00, 22:00 UTC daily
+    - cron: '0 6,12,18,22 * * *'
+  workflow_dispatch:
+  push:
+    branches:
+      - main
+
+permissions:
+  contents: write
+
+jobs:
+  fetch:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Install dependencies
+        run: |
+          pip install requests beautifulsoup4 lxml
+
+      - name: Fetch trending data
+        run: |
+          python fetch_trending.py
+
+      - name: Commit and push
+        if: github.event_name != 'push'
+        run: |
+          git config --local user.email "github-action[bot]@users.noreply.github.com"
+          git config --local user.name "GitHub Action"
+          git add data/trending.json
+          if git diff --cached --quiet; then
+            echo "No changes to commit"
+          else
+            git commit -m "Update trending data $(date -u +'%Y-%m-%d %H:%M UTC')"
+            git push
+          fi
