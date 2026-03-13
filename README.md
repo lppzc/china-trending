@@ -12,7 +12,7 @@
 
 ## 部署
 
-项目已配置 GitHub Pages，直接 push 到 main 分支即可自动部署。
+项目已配置 GitHub Pages，直接 push 到 master 分支即可自动部署。
 
 访问地址: https://lppzc.github.io/china-trending/
 
