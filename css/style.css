@@ -3,7 +3,7 @@
    ============================================ */
 
 :root {
-  /* Color Palette - Cyberpunk */
+  /* Color Palette - Cyberpunk Dark */
   --bg-primary: #0a0a0f;
   --bg-secondary: #12121a;
   --bg-tertiary: #1a1a25;
@@ -22,6 +22,10 @@
   --border-glow: rgba(0, 240, 255, 0.3);
   --border-subtle: rgba(255, 255, 255, 0.08);
 
+  /* Background Pattern */
+  --bg-gradient-1: radial-gradient(ellipse at 20% 20%, rgba(0, 240, 255, 0.08) 0%, transparent 50%);
+  --bg-gradient-2: radial-gradient(ellipse at 80% 80%, rgba(255, 0, 170, 0.06) 0%, transparent 50%);
+
   /* Spacing */
   --space-xs: 4px;
   --space-sm: 8px;
@@ -38,6 +42,27 @@
   --transition-fast: 0.15s ease;
   --transition-normal: 0.25s ease;
   --transition-slow: 0.4s ease;
+}
+
+/* Light Theme */
+[data-theme="light"] {
+  --bg-primary: #f5f7fa;
+  --bg-secondary: #ffffff;
+  --bg-tertiary: #e8ecf1;
+  --bg-card: #ffffff;
+
+  --accent-cyan: #0099ff;
+  --accent-pink: #e91e63;
+
+  --text-primary: #1a1a2e;
+  --text-secondary: #5a5a7a;
+  --text-muted: #8a8aaa;
+
+  --border-glow: rgba(0, 153, 255, 0.3);
+  --border-subtle: rgba(0, 0, 0, 0.08);
+
+  --bg-gradient-1: radial-gradient(ellipse at 20% 20%, rgba(0, 153, 255, 0.08) 0%, transparent 50%);
+  --bg-gradient-2: radial-gradient(ellipse at 80% 80%, rgba(233, 30, 99, 0.06) 0%, transparent 50%);
 }
 
 /* Reset */
@@ -70,8 +95,8 @@ body::before {
   right: 0;
   bottom: 0;
   background:
-    radial-gradient(ellipse at 20% 20%, rgba(0, 240, 255, 0.08) 0%, transparent 50%),
-    radial-gradient(ellipse at 80% 80%, rgba(255, 0, 170, 0.06) 0%, transparent 50%),
+    var(--bg-gradient-1),
+    var(--bg-gradient-2),
     repeating-linear-gradient(
       0deg,
       transparent,
@@ -176,6 +201,43 @@ body::before {
   from { transform: rotate(0deg); }
   to { transform: rotate(360deg); }
 }
+
+/* Theme Toggle Button */
+.header-actions {
+  display: flex;
+  gap: var(--space-sm);
+}
+
+.theme-btn {
+  width: 48px;
+  height: 48px;
+  border-radius: 12px;
+  border: 1px solid var(--border-glow);
+  background: var(--bg-secondary);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: var(--transition-normal);
+}
+
+.theme-btn:hover {
+  background: var(--bg-tertiary);
+  border-color: var(--accent-cyan);
+  box-shadow: 0 0 20px rgba(0, 240, 255, 0.3);
+}
+
+.theme-icon {
+  width: 24px;
+  height: 24px;
+  fill: var(--accent-cyan);
+}
+
+.theme-btn .sun-icon { display: none; }
+.theme-btn .moon-icon { display: block; }
+
+[data-theme="light"] .theme-btn .sun-icon { display: block; }
+[data-theme="light"] .theme-btn .moon-icon { display: none; }
 
 /* ============================================
    Platform Tabs
@@ -285,6 +347,63 @@ body::before {
 
   .app {
     padding: var(--space-sm);
+  }
+
+  .header-content {
+    flex-wrap: wrap;
+  }
+
+  .logo {
+    flex: 1;
+  }
+
+  .header-actions {
+    display: flex;
+    gap: var(--space-xs);
+  }
+
+  .refresh-btn,
+  .theme-btn {
+    width: 40px;
+    height: 40px;
+  }
+
+  .platform-tabs {
+    padding: var(--space-sm) 0;
+    gap: var(--space-xs);
+  }
+
+  .tab {
+    padding: var(--space-xs) var(--space-sm);
+    font-size: 0.85rem;
+  }
+
+  .platform-icon {
+    width: 16px;
+    height: 16px;
+  }
+
+  .trending-card {
+    padding: var(--space-sm);
+  }
+
+  .card-title {
+    font-size: 0.9rem;
+  }
+
+  .card-meta {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: var(--space-xs);
+  }
+
+  .footer-content {
+    flex-direction: column;
+    text-align: center;
+  }
+
+  .footer-content > * {
+    width: 100%;
   }
 }
 
@@ -442,6 +561,44 @@ body::before {
   text-align: center;
   padding: var(--space-xl);
   color: var(--text-secondary);
+}
+
+/* Error State */
+.error-state {
+  grid-column: 1 / -1;
+  text-align: center;
+  padding: var(--space-xl);
+  color: var(--text-secondary);
+}
+
+.error-icon {
+  width: 48px;
+  height: 48px;
+  fill: var(--accent-pink);
+  margin-bottom: var(--space-md);
+}
+
+.error-message {
+  color: var(--accent-pink);
+  margin-bottom: var(--space-sm);
+}
+
+.retry-btn {
+  margin-top: var(--space-md);
+  padding: var(--space-sm) var(--space-lg);
+  background: var(--accent-cyan);
+  color: #000;
+  border: none;
+  border-radius: 8px;
+  font-size: 0.9rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: var(--transition-fast);
+}
+
+.retry-btn:hover {
+  opacity: 0.9;
+  transform: scale(1.02);
 }
 
 /* ============================================

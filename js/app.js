@@ -29,6 +29,7 @@
   const elements = {
     trendingList: document.getElementById('trendingList'),
     refreshBtn: document.getElementById('refreshBtn'),
+    themeBtn: document.getElementById('themeBtn'),
     lastUpdate: document.getElementById('lastUpdate'),
     tabs: document.querySelectorAll('.tab')
   };
@@ -117,6 +118,21 @@
   }
 
   /**
+   * Render error state
+   */
+  function renderError(message) {
+    elements.trendingList.innerHTML = `
+      <div class="error-state">
+        <svg viewBox="0 0 24 24" class="error-icon">
+          <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-2h2v2zm0-4h-2V7h2v6z"/>
+        </svg>
+        <p class="error-message">${escapeHtml(message)}</p>
+        <button class="retry-btn" onclick="location.reload()">重新加载</button>
+      </div>
+    `;
+  }
+
+  /**
    * Render trending cards
    */
   function renderTrending(data) {
@@ -175,7 +191,7 @@
       renderTrending(data);
     } catch (error) {
       console.error('Failed to fetch trending data:', error);
-      renderEmpty();
+      renderError('加载数据失败，请检查网络后重试');
     }
   }
 
@@ -223,6 +239,28 @@
     refreshData();
   }
 
+  /**
+   * Handle theme toggle
+   */
+  function handleThemeToggle() {
+    const html = document.documentElement;
+    const currentTheme = html.getAttribute('data-theme');
+    const newTheme = currentTheme === 'light' ? 'dark' : 'light';
+
+    html.setAttribute('data-theme', newTheme);
+    localStorage.setItem('theme', newTheme);
+  }
+
+  /**
+   * Load saved theme
+   */
+  function loadTheme() {
+    const savedTheme = localStorage.getItem('theme');
+    const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+    const theme = savedTheme || (prefersDark ? 'dark' : 'light');
+    document.documentElement.setAttribute('data-theme', theme);
+  }
+
   // ============================================
   // Initialization
   // ============================================
@@ -231,11 +269,15 @@
    * Initialize the application
    */
   function init() {
+    // Load saved theme
+    loadTheme();
+
     // Bind events
     elements.tabs.forEach(tab => {
       tab.addEventListener('click', handleTabClick);
     });
     elements.refreshBtn.addEventListener('click', handleRefreshClick);
+    elements.themeBtn.addEventListener('click', handleThemeToggle);
 
     // Load initial data
     renderLoading();
